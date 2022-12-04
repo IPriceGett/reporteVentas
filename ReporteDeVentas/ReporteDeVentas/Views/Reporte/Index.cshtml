@@ -1,0 +1,519 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@model ReporteDeVentas.Models.Busqueda
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0" />
+    <link rel="stylesheet" href="~/Bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Styles/LoadRing.css" />
+
+
+</head>
+<body class="hidden">
+    <div class="center" id="loader">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="container">
+        <img src="~/Styles/logo_patrotelas.png" width="100" height="100" align="right"><br />
+        <blockquote class="blockquote text-center">
+            <p class="mb-0"><h1><em>Reporte de ventas</em></h1></p>
+            <footer class="blockquote-footer">Patronato Telas</footer>
+        </blockquote>
+    </div>
+    <div class="container">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link active" id="nav-ventas-tab" data-toggle="tab" href="#nav-ventas" role="tab" aria-controls="nav-ventas" aria-selected="true" onclick="location.href ='@Url.Action("Index","Reporte")'">Ventas</a>
+                @if (Model.stock.Count != 0)
+                {
+                    <a class="nav-link" id="nav-inventario-tab" data-toggle="tab" href="#nav-inventario" role="tab" aria-controls="nav-inventario" aria-selected="false">Inventario</a>
+
+                }
+                else
+                {
+                    <a class="nav-link" id="nav-inventario-tab" data-toggle="tab" href="#nav-inventario" role="tab" aria-controls="nav-inventario" aria-selected="false" onclick="location.href ='@Url.Action("Inventario","Reporte")'">Inventario</a>
+                }
+            </div>
+        </nav>
+    </div>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-ventas" role="tabpanel" aria-labelledby="nav-ventas-tab">
+            <form method="post">
+                <div class="container accordion" id="accordion">
+                    <div class="card">
+
+                        <div class="card-header" id="HeadingOne">
+                            <a href="#collapseOne" class="btn btn-block text-left" type="button" data-toggle="" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" id="buttonAccordion">
+                                <h5><u>Criterios de búsqueda</u></h5>
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                    <div class="container">
+                                        <div class="form-row">
+                                            @if (Model.fechas.Count != 0 && Model.Lista_Productos.Count != 0)
+                                            {
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="start" class="lead">Fecha Inicio</label>
+                                                    <input type="date" id="start" name="Fecha_Inicio"
+                                                           value="@Model.fechas[0].Fecha_Inicio"
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="starth" class="lead">Hora Inicio</label>
+                                                    <input type="time" id="starth" name="Hora_Inicio"
+                                                           value="@Model.fechas[0].Hora_Inicio"
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="end" class="lead">Fecha Fin</label>
+                                                    <input type="date" id="end" name="Fecha_Fin"
+                                                           value="@Model.fechas[0].Fecha_Fin"
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="endh" class="lead">Hora Fin</label>
+                                                    <input type="time" id="endh" name="Hora_Fin"
+                                                           value="@Model.fechas[0].Hora_Fin"
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="start" class="lead">Fecha Inicio</label>
+                                                    <input type="date" id="start" name="Fecha_Inicio"
+                                                           value=""
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="starth" class="lead">Hora Inicio</label>
+                                                    <input type="time" id="starth" name="Hora_Inicio"
+                                                           value=""
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="end" class="lead">Fecha Fin</label>
+                                                    <input type="date" id="end" name="Fecha_Fin"
+                                                           value=""
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="endh" class="lead">Hora Fin</label>
+                                                    <input type="time" id="endh" name="Hora_Fin"
+                                                           value=""
+                                                           min="2018-01-01" max="2021-12-31" class="form-control" required />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="form-row">
+                                            @if (Model.fechas.Count != 0 && Model.Lista_Productos.Count != 0)
+                                            {
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="punto_venta" class="lead">Punto de venta</label>
+                                                    <select name="punto_venta" id="punto_venta" class="form-control" required>
+                                                        <option>@Model.fechas[0].Caja_Seleccionada</option>
+                                                        @foreach (var cajas in Model.Criterios)
+                                                        {
+                                                            <option>@cajas.Caja</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="categoria" class="lead">Categoria </label>
+                                                    <select name="categoria" id="categoria" class="form-control">
+                                                        <option>@Model.fechas[0].Categorias</option>
+                                                        @foreach (var categoria in Model.categories)
+                                                        {
+                                                            <option>@categoria.Categorias</option>
+                                                        }
+                                                        <option>Todas</option>
+                                                    </select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="punto_venta" class="lead">Punto de venta: </label>
+                                                    <select name="punto_venta" id="punto_venta" class="form-control">
+                                                        <option></option>
+                                                        @foreach (var cajas in Model.Criterios)
+                                                        {
+                                                            <option>@cajas.Caja</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <label for="categoria" class="lead">Categoria: </label>
+                                                    <select name="categoria" id="categoria" class="form-control" required>
+                                                        <option></option>
+                                                        <option>Todas</option>
+                                                        @foreach (var categoria in Model.categories)
+                                                        {
+                                                            <option>@categoria.Categorias</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            }
+                                        </div>
+                                        <p align="center"><input type="submit" name="BtnSubmit" value="Buscar" class="btn btn-primary btn-block" id="search" /></p>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            @if (Model.HayErrores)
+            {
+                <div class="container">
+                    <div class="alert alert-danger" role="alert">
+                        @ViewBag.Mensaje
+                    </div>
+                </div>
+            }
+
+            @if (Model.Lista_Productos.Count != 0 && Model.fechas.Count != 0)
+            {
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="panel-title"><u>Resumen del Periodo</u></h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="Desde" class="lead">Desde: <text class="font-weight-bold fecha_inicio">@Convert.ToDateTime(Model.fechas[0].Fecha_Inicio).ToString("dd-MM-yyyy")</text> <text class="font-weight-bold hora_inicio">@Model.fechas[0].Hora_Inicio</text><br /></label>
+                                        </div>
+                                        <div class="col">
+                                            <label for="Hasta" class="lead">Hasta: <text class="font-weight-bold fecha_fin">@Convert.ToDateTime(Model.fechas[0].Fecha_Fin).ToString("dd-MM-yyyy") @Model.fechas[0].Hora_Fin</text><br /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="Total Costo" class="lead">Total Costo: <text class="font-weight-bold total_compra">$@Model.Lista_Productos[0].TotalPriceB.ToString("0,0")</text><br />  </label><br />
+                                        </div>
+                                        <div class="col">
+                                            <label for="Total Costo" class="lead">Total Utilidad: <text class="font-weight-bold total_utilidad">$@Model.Lista_Productos[0].TotalPriceU.ToString("0,0")</text><br /> </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="Total Costo" class="lead">Total Venta: <text class="font-weight-bold total_venta">$@Model.Lista_Productos[0].TotalPriceS.ToString("0,0")</text></label><br />
+                                        </div>
+                                        <div class="col">
+                                            <label for="Total Costo" class="lead">Porcentaje de Utilidad: <text class="font-weight-bold porcentaje_utilidad">@Model.Lista_Productos[0].PricePercent.ToString("N", new System.Globalization.CultureInfo("is-IS")) %</text></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="Caja" class="lead">Punto de venta: <text class="font-weight-bold caja">@Model.fechas[0].Caja_Seleccionada</text><br /></label>
+                                        </div>
+                                        <div class="col">
+                                            <label for="Caja" class="lead">Categoria: <text class="font-weight-bold categoria">@Model.fechas[0].Categorias</text><br /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><u>Detalle de Productos</u></h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <div class="container">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped table-bordered" id="TableVentas" border="1">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>Código </th>
+                                                    <th>Producto </th>
+                                                    <th>Unidades </th>
+                                                    <th>Precio Unitario </th>
+                                                    <th>Costo Unitario </th>
+                                                    <th>Total Venta </th>
+                                                    <th>Total Costo </th>
+                                                    <th>Total Utilidad </th>
+                                                    <th>% Total</th>
+                                                </tr>
+                                            </thead>
+
+                                            @foreach (var item in Model.Product)
+                                            {
+                                                <tr>
+                                                    <td>@item.Code</td>
+                                                    <td>@item.Name</td>
+                                                    <td>@item.Unidades.ToString("N", new System.Globalization.CultureInfo("is-IS"))</td>
+                                                    <td>$@item.Venta.ToString("0,0")</td>
+                                                    <td>$@item.Compra.ToString("0,0")</td>
+                                                    <td>$@item.Total_Venta.ToString("0,0")</td>
+                                                    <td>$@item.Total_Compra.ToString("0,0")</td>
+                                                    <td>$@item.Total_Utilidad.ToString("0,0")</td>
+                                                    <td>@item.Total_Porcentaje.ToString("N", new System.Globalization.CultureInfo("is-IS"))%</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+        <div class="tab-pane fade" id="nav-inventario" role="tabpanel" aria-labelledby="nav-inventario-tab">
+            @if (Model.Lista_Productos.Count != 0 && Model.Lista_Productos[0].totalCosto != null)
+            {
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="panel-title"><u>Resumen del Inventario</u></h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <div class="container">
+                                    <div class="col">
+                                        <div class="row">
+                                            <label for="Caja" class="lead">Existencias Totales: <text class="font-weight-bold caja">@Model.Lista_Productos[0].totalElementos</text><br /></label>
+                                        </div>
+                                        <div class="row">
+                                            <label for="Caja" class="lead">Total Costo: <text class="font-weight-bold caja">$@Model.Lista_Productos[0].totalCosto</text><br /></label>
+                                        </div>
+                                        <div class="row">
+                                            <label for="Caja" class="lead">Total Venta: <text class="font-weight-bold caja">$@Model.Lista_Productos[0].totalGanancia</text><br /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><u>Inventario</u></h5>
+                    </div>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <div class="container">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-bordered" id="TableInventario" border="1">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Código </th>
+                                                <th>Producto </th>
+                                                <th>Categoria </th>
+                                                <th>Stock Inicial</th>
+                                                <th>Stock Vendido </th>
+                                                <th>Stock Actual </th>
+                                            </tr>
+                                        </thead>
+
+                                        @foreach (var item in Model.stock)
+                                        {
+                                            <tr>
+                                                <td>@item.codigo</td>
+                                                <td>@item.producto</td>
+                                                <td>@item.categoria</td>
+                                                <td>@item.stockInicial.ToString("0,0")</td>
+                                                <td>@item.unidadesVendidas.ToString("0,0")</td>
+                                                <td>@item.stockActual.ToString("0,0")</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="~/Bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</body>
+<script>
+    window.onload = function () {
+        $("#loader").fadeOut();
+        $("body").removeClass("hidden");
+    };
+        $(document).ready(function () {
+            $("#TableVentas").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Resumen Tabla',
+                        className: 'btn btn-success',
+                        text: '<i class="fas fa-file-excel"></i>'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Reporte ' + $('.fecha_inicio').text(),
+                        className: 'btn btn-danger',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        customize: function (doc) {
+                            doc.content.splice(0, 1, {
+                                text: [
+                                    {
+                                        text: 'Reporte de ventas \n\n', style: { 'fontSize': 18, 'bold': true, 'alignment': 'center' }
+                                    },
+                                    {
+                                        text: 'Fecha Inicio: ' + $('.fecha_inicio').text() + ' ' + $('.hora_inicio').text(), style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Reporte de ventassdgfhlll', style: { 'fontSize': 18, 'bold': true, 'alignment': 'center', 'color': 'white' }
+                                    },
+                                    {
+                                        text: 'Fecha Final: ' + $('.fecha_fin').text() + '\n', style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Total Compra: ' + $('.total_compra').text(), style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Reporte de ventassdgfhhfd', style: { 'fontSize': 18, 'bold': true, 'alignment': 'center', 'color': 'white' }
+                                    },
+                                    {
+                                        text: 'Total Venta: ' + $('.total_venta').text() + '\n', style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Total Utilidad: ' + $('.total_utilidad').text(), style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Reporte de ventassdgfhhfdll', style: { 'fontSize': 18, 'bold': true, 'alignment': 'center', 'color': 'white' }
+                                    },
+                                    {
+                                        text: 'Total Porcentaje: ' + $('.porcentaje_utilidad').text() + '\n', style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Punto de Venta: ' + $('.caja').text(), style: { 'alignment': 'left' }
+                                    },
+                                    {
+                                        text: 'Reporte de ventassdgfhhfdgh', style: { 'fontSize': 18, 'bold': true, 'alignment': 'center', 'color': 'white' }
+                                    },
+                                    {
+                                        text: 'Categoria: ' + $('.categoria').text() + '\n \n', style: { 'alignment': 'right' }
+                                    }
+                                ]
+                            });
+                        },
+                    }],
+                "paging": true,
+                "info": false,
+                "sSearch": true,
+                "order": [[2, "ASC"]],
+                "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [1] }],
+                language: {
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sSearch": "Buscar:",
+                    "decimal": ",",
+                    "thousands": ".",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "sProcessing": "Procesando...",
+                }
+            });
+
+            $("#TableInventario").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Inventario Tabla',
+                        className: 'btn btn-success',
+                        text: '<i class="fas fa-file-excel"></i>'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Inventario ',
+                        className: 'btn btn-danger',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                    }],
+                "paging": true,
+                "info": false,
+                "sSearch": true,
+                "order": [[3, "DESC"]],
+                "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [1] }],
+                language: {
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sSearch": "Buscar:",
+                    "decimal": ",",
+                    "thousands": ".",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "sProcessing": "Procesando...",
+                }
+            });
+
+            $("#buttonAccordion").on("click", function () {
+                $('#collapseOne').toggle('slow');
+            });
+            if (@Model.fechas.Count != 0 && @Model.Lista_Productos.Count != 0) $('#collapseOne').toggle('slow');
+            if (@Model.stock.Count != 0 && @Model.fechas.Count == 0) $('#nav-inventario-tab').click();
+
+        })
+</script>
+
+
+
+
+
